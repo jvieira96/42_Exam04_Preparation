@@ -1,4 +1,3 @@
-/* 
 Assignment name  : ft_popen
 Expected files   : ft_popen.c
 Allowed functions: pipe, fork, dup2, execvp, close, exit
@@ -38,4 +37,3 @@ int	main() {
 Hints:
 Do not leak file descriptors!
 This exercise is inspired by the libc's popen(). 
- */

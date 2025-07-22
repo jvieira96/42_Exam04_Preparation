@@ -1,4 +1,3 @@
-/* 
 Assignment name:	picoshell
 Expected files:		picoshell.c
 Allowed functions:	close, fork, wait, exit, execvp, dup2, pipe
@@ -28,4 +27,3 @@ Examples:
 picoshell
 ./picoshell echo 'squalala' "|" cat "|" sed 's/a/b/g'
 squblblb
-*/

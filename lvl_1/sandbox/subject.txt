@@ -1,4 +1,3 @@
-/*
 Assignment name		:	sandbox
 Expected files		:	sandbox.c
 Allowed functions	:	fork, waitpid, exit, alarm, sigaction, kill,
@@ -29,4 +28,3 @@ You must not leak processes (even in zombie state, this will be checked using
 wait).
 
 We will test your code with very bad functions.
-*/
