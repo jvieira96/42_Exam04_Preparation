@@ -37,7 +37,7 @@ $echo -n '{"recursion":{"recursion":{"recursion":{"recursion":"recursion"}}}}' |
 {"recursion":{"recursion":{"recursion":{"recursion":"recursion"}}}}$
 $echo -n '"unfinished string' | ./argo /dev/stdin | cat -e
 unexpected end of input$
-$echo -n '"unfinished string 2"' | ./argo /dev/stdin | cat -e
+$echo -n '"unfinished string 2\"' | ./argo /dev/stdin | cat -e
 unexpected end of input$
 $echo -n '{"no value?":}' | ./argo /dev/stdin | cat -e
 unexpected token '}'$
