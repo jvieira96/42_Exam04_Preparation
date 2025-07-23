@@ -1,3 +1,15 @@
+/* ************************************************************************** */
+/*                                                                            */
+/*                                                        :::      ::::::::   */
+/*   vbc.c                                              :+:      :+:    :+:   */
+/*                                                    +:+ +:+         +:+     */
+/*   By: jpedro-f <jpedro-f@student.42.fr>          +#+  +:+       +#+        */
+/*                                                +#+#+#+#+#+   +#+           */
+/*   Created: 2025/07/23 18:32:47 by jpedro-f          #+#    #+#             */
+/*   Updated: 2025/07/23 18:32:51 by jpedro-f         ###   ########.fr       */
+/*                                                                            */
+/* ************************************************************************** */
+
 #include "vbc.h"
 
 node    *new_node(node n)
@@ -45,20 +57,20 @@ int expect(char **s, char c)
         return (1);
     unexpected(**s);
     return (0);
-}
- */
-int check_parentheses(char *s)
+} */
+
+//...
+
+int check_parentheses(char *str)
 {
     int balance = 0;
     int i = -1;
 
-    if (!s)
-        return (-1);
-    while(s[++i])
+    while (str[++i])
     {
-        if (s[i] == '(')
+        if (str[i] == '(')
             balance++;
-        else if (s[i] == ')')
+        else if (str[i] == ')')
         {
             balance--;
             if (balance < 0)
@@ -67,57 +79,54 @@ int check_parentheses(char *s)
     }
     return (balance);
 }
-//...
 
-node    *parse_nbr_or_group(char **s)
+node *parse_nbr_or_group(char **str)
 {
     node    *res = NULL;
     node    temp;
 
-    if (**s == '(')
+    if (**str == '(')
     {
-        (*s)++;
-        res = parse_add(s);
-        if (!res || **s != ')')
+        (*str)++;
+        res = parse_add(str);
+        if (!str || **str != ')')
         {
             destroy_tree(res);
-            unexpected(**s);
-            return (NULL);
+            unexpected(**str);
+            return NULL;
         }
-        (*s)++;
+        (*str)++;
         return (res);
     }
-    if (isdigit(**s))
+    if (isdigit(**str))
     {
         temp.type = VAL;
-        temp.val = **s - '0';
+        temp.val = (**str) - '0';
         res = new_node(temp);
-        if (!res)
-            return (NULL);
-        (*s)++;
+        (*str)++;
         return (res);
     }
-    unexpected(**s);
-    return (NULL);
+    unexpected(**str);
+    return NULL;
 }
 
-node    *parse_mult(char **s)
+node    *parse_multi(char **str)
 {
-    node    *l;
-    node    *r;
-    node    temp;
+    node *l;
+    node *r;
+    node temp;
 
-    l = parse_nbr_or_group(s);
+    l = parse_nbr_or_group(str);
     if (!l)
-        return (NULL);
-    while (**s == '*')
+        return NULL;
+    while (**str == '*')
     {
-        (*s)++;
-        r = parse_nbr_or_group(s);
+        (*str)++;
+        r = parse_nbr_or_group(str);
         if (!r)
         {
             destroy_tree(l);
-            return (NULL);
+            return NULL;
         }
         temp.type = MULTI;
         temp.l = l;
@@ -127,23 +136,23 @@ node    *parse_mult(char **s)
     return (l);
 }
 
-node    *parse_add(char **s)
+node    *parse_add(char **str)
 {
-    node    *l;
-    node    *r;
-    node    temp;
+    node *l;
+    node *r;
+    node temp;
 
-    l = parse_mult(s);
+    l = parse_multi(str);
     if (!l)
-        return (NULL);
-    while (**s == '+')
+        return NULL;
+    while (**str == '+')
     {
-        (*s)++;
-        r = parse_mult(s);
+        (*str)++;
+        r = parse_multi(str);
         if (!r)
         {
             destroy_tree(l);
-            return (NULL);
+            return NULL;
         }
         temp.type = ADD;
         temp.l = l;
@@ -168,21 +177,21 @@ int eval_tree(node *tree)
 
 int main(int argc, char **argv)
 {
-    node *tree;
-    char *input = argv[1];
+    node    *tree;
+    char    *input = argv[1];
 
     if (argc != 2)
         return (1);
-    if (check_parentheses(argv[1]) == -1)
+    if (check_parentheses(input) < 0)
     {
-        printf("Unexpected token ')'\n");
-        return (1);
+        unexpected(')');
+        return 1;
     }
-    else if (check_parentheses(argv[1]) != 0)
+    else if (check_parentheses(input) != 0)
     {
-        printf("Unexpected token '('\n");
-        return (1);       
-    } 
+        unexpected('(');
+        return 1;
+    }    
     tree = parse_add(&input);
     if (!tree)
         return (1);
@@ -190,8 +199,9 @@ int main(int argc, char **argv)
     {
         unexpected(*input);
         destroy_tree(tree);
-        return (1);
-    }    
+        return 1;
+    }
     printf("%d\n", eval_tree(tree));
     destroy_tree(tree);
+	return (0);
 }

@@ -19,10 +19,10 @@ typedef struct node {
 node    *new_node(node n);
 void    destroy_tree(node *n);
 void    unexpected(char c);
-int check_parentheses(char *s);
-node    *parse_nbr_or_group(char **s);
-node    *parse_mult(char **s);
-node    *parse_add(char **s);
+int check_parentheses(char *str);
+node *parse_nbr_or_group(char **str);
+node    *parse_multi(char **str);
+node    *parse_add(char **str);
 int eval_tree(node *tree);
 
 #endif
