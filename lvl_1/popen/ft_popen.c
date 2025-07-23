@@ -5,75 +5,73 @@
 /*                                                    +:+ +:+         +:+     */
 /*   By: jpedro-f <jpedro-f@student.42.fr>          +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
-/*   Created: 2025/07/21 12:59:39 by jpedro-f          #+#    #+#             */
-/*   Updated: 2025/07/21 13:27:39 by jpedro-f         ###   ########.fr       */
+/*   Created: 2025/07/23 14:59:59 by jpedro-f          #+#    #+#             */
+/*   Updated: 2025/07/23 15:42:50 by jpedro-f         ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
 #include <unistd.h>
+#include <sys/types.h>
+#include <fcntl.h> 
 #include <stdlib.h>
+#include <string.h>
+#include <stdio.h>
 
 int ft_popen(const char *file, char *const argv[], char type)
 {
-    int fd[2];
-    int pid;
+	int	 	fd[2];
+	pid_t 	pid;
 
-    if (!file || !argv || (type != 'r' && type != 'w'))
-        return (-1);
-    if (pipe(fd) == -1)
-        return (-1);
-    pid = fork();
-    if (pid == -1)
-    {
-        close(fd[0]);
-        close (fd[1]);
-        return (-1);
-    }
-    if (pid == 0)
-    {
-        if (type == 'r')
-        {
-            if (dup2(fd[1], 1) == -1)
-                exit(1);
-        }
-        if (type == 'w')
-        {
-            if (dup2(fd[0], 0) == -1)
-                exit (1);
-        }
-        close(fd[0]);
-        close(fd[1]);
-        execvp(file, argv);
-        exit(1);
-    }
-    if (type == 'r')
-    {
-        close(fd[1]);
-        return (fd[0]);
-    }
-    else
-    {
-        close(fd[0]);
-        return (fd[1]);
-    }
+	if (!file || !argv || (type != 'r' && type != 'w'))
+		return (-1);
+	pipe(fd);
+	pid = fork();
+	if (pid == 0)
+	{
+		if (type == 'r')
+			dup2(fd[1], 1);
+		if (type == 'w')
+			dup2(fd[0], 0);
+		close(fd[0]);
+		close(fd[1]);
+		execvp(file, argv);
+		exit(1);
+	}
+	if (type == 'r')
+	{
+		close(fd[1]);
+		return(fd[0]);
+	}
+	else
+	{
+		close(fd[0]);
+		return (fd[1]);
+	}
 }
 
 /* 
-int main ()
-{
-    int fd_ls;
-    int fd_wc;
-    char buffer[1024];
-    int bytes_read;
+//test type 'r'
+int	main() 
+{	
+	int fd = ft_popen("ls", (char *const[]){"ls", "-l", NULL}, 'r');
+	char buf[1];
 
-    fd_ls = ft_popen("ls", (char *const[]){"ls", NULL}, 'r');
-    fd_wc = ft_popen("wc", (char *const[]){"wc", "-w", NULL}, 'w');
-    if (fd_ls == -1 || fd_wc == -1)
-        return (1);
-    while ((bytes_read = read(fd_ls, buffer, sizeof(buffer))) > 0)
-        write(fd_wc, buffer, bytes_read);
-    close(fd_wc);
-    close(fd_ls);
+	while (read(fd, buf, 1))
+		write(1, buf, 1);
+	close(fd);
+	return (0);
+}
+ */
+
+/* 
+//test type 'w'
+int main()
+{
+    int fd = ft_popen("wc", (char *const[]){"wc", "-w", NULL}, 'w');
+    char *input = "Hello world\nThis is a test\nthird line mofo\n";
+
+    write(fd, input, strlen(input));
+	close(fd);
     return (0);
 }
  */
