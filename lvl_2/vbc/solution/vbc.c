@@ -6,7 +6,7 @@
 /*   By: jpedro-f <jpedro-f@student.42.fr>          +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2025/07/23 18:32:47 by jpedro-f          #+#    #+#             */
-/*   Updated: 2025/07/23 18:32:51 by jpedro-f         ###   ########.fr       */
+/*   Updated: 2025/07/26 15:59:55 by jpedro-f         ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -175,13 +175,31 @@ int eval_tree(node *tree)
     }
 }
 
+int check_nbrs(char *input)
+{
+    int i = -1;
+
+    while (input[++i])
+    {
+        if (isdigit(input[i]) && isdigit(input[i + 1]))
+        {
+            unexpected(input[i + 1]);
+            return 1;
+        }
+    }
+    return 0;
+}
+
 int main(int argc, char **argv)
 {
     node    *tree;
-    char    *input = argv[1];
+    char    *input;
 
     if (argc != 2)
         return (1);
+    input = argv[1];
+    if (check_nbrs(input) != 0)
+        return 1;
     if (check_parentheses(input) < 0)
     {
         unexpected(')');
